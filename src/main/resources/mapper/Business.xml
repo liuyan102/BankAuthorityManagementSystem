@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bank.mapper.BusinessMapper">
+    <insert id="add" parameterType="com.bank.pojo.Business">
+        insert into business_info(
+            business_code,business_name,business_description,business_type,business_status
+        )
+        values(
+            #{businessCode},#{businessName},#{businessDescription},#{businessType},
+            #{businessStatus}
+        )
+    </insert>
+
+    <delete id="delete" parameterType="com.bank.pojo.Business">
+        delete from business_info where business_code = #{businessCode}
+    </delete>
+
+    <delete id="deleteAll" parameterType="com.bank.pojo.Business" >
+        delete from business_info where business_code in
+        <foreach collection="array" item="businessCode" open="(" close=")" separator=",">
+            #{businessCode}
+        </foreach>
+    </delete>
+
+    <update id="update" parameterType="com.bank.pojo.Business">
+        update business_info set
+            business_name = #{businessName},business_description = #{businessDescription},
+            business_type = #{businessType},business_status = #{businessStatus}
+        where business_code = #{businessCode}
+    </update>
+
+    <select id="queryAll" resultType="com.bank.pojo.Business">
+        select business_code,business_name,business_description,business_type,business_status from business_info
+    </select>
+
+    <select id="queryByCode" resultType="com.bank.pojo.Business">
+        select business_code,business_name from business_info where 1=1
+        <choose>
+            <when test="businessCode==''">
+                and business_code like concat('%',#{businessCode},'%')
+            </when>
+            <otherwise>
+                and  business_code = #{businessCode}
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="queryByKTS" resultType="com.bank.pojo.Business">
+        select business_code,business_name,business_description,business_type,business_status
+        from business_info where concat(
+            business_code,business_name,business_description
+        )
+        like concat('%',#{key},'%')
+        <if test="businessType == 3">
+            and business_type != #{businessType}
+        </if>
+        <if test="businessStatus == 2">
+            and business_status != #{businessStatus}
+        </if>
+        <if test="businessType != 3">
+            and business_type = #{businessType}
+        </if>
+        <if test="businessStatus != 2">
+            and business_status = #{businessStatus}
+        </if>
+    </select>
+</mapper>

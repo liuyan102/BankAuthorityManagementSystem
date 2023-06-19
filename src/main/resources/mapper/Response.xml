@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bank.mapper.ResponseMapper">
+    <insert id="add" parameterType="com.bank.pojo.Response">
+        insert into response_info(
+            response_code,response_description,response_type
+        )
+        values(
+             #{responseCode},#{responseDescription},#{responseType}
+        )
+    </insert>
+
+    <delete id="delete" parameterType="com.bank.pojo.Response">
+        delete from response_info where response_code = #{responseCode}
+    </delete>
+
+    <delete id="deleteAll" parameterType="com.bank.pojo.Response" >
+        delete from response_info where response_code in
+        <foreach collection="array" item="responseCode" open="(" close=")" separator=",">
+            #{responseCode}
+        </foreach>
+    </delete>
+
+    <update id="update" parameterType="com.bank.pojo.Response">
+        update response_info set
+            response_description = #{responseDescription},response_type = #{responseType}
+        where response_code = #{responseCode}
+    </update>
+
+    <select id="queryByCode" resultType="com.bank.pojo.Response">
+        select response_code,response_description,response_type from response_info where response_code = #{responseCode}
+    </select>
+
+    <select id="queryAll" resultType="com.bank.pojo.Response">
+        select response_code,response_description,response_type from response_info
+    </select>
+
+    <select id="queryByKT" resultType="com.bank.pojo.Response">
+        select response_code,response_description,response_type from response_info where concat(
+            response_code,response_description
+        )
+        like concat('%',#{key},'%')
+        <if test="responseType == 2">
+            and response_type != #{responseType}
+        </if>
+        <if test="responseType != 2">
+            and response_type = #{responseType}
+        </if>
+    </select>
+</mapper>

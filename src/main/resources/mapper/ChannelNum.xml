@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bank.mapper.ChannelNumMapper">
+    <insert id="add" parameterType="com.bank.pojo.ChannelNum">
+        insert into channel_num(channel_id) values (#{channelID})
+    </insert>
+
+    <delete id="delete" parameterType="com.bank.pojo.ChannelNum">
+        delete from channel_num where channel_id = #{channelID}
+    </delete>
+
+    <delete id="deleteAll" parameterType="com.bank.pojo.ChannelNum">
+        delete from channel_num where channel_id in
+        <foreach collection="array" item="channelID" open="(" close=")" separator=",">
+            #{channelID}
+        </foreach>
+    </delete>
+
+    <select id="queryMax" resultType="java.lang.Integer">
+        select max(channel_id) from channel_num where 1=1
+    </select>
+</mapper>

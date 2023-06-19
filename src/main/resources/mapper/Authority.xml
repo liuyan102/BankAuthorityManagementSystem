@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bank.mapper.AuthorityMapper">
+    <insert id="add" parameterType="com.bank.pojo.Authority">
+        insert into authority_info(
+            channel_code,business_code,open_mode,open_time,end_time
+        )values
+        <foreach collection="list" item="authority" separator=",">
+            (
+            #{authority.channelCode},#{authority.businessCode},#{authority.openMode},
+            #{authority.openTime},#{authority.endTime}
+            )
+        </foreach>
+    </insert>
+
+    <delete id="deleteChannel" parameterType="com.bank.pojo.Authority">
+        delete from authority_info where channel_code = #{channelCode}
+    </delete>
+
+    <delete id="deleteAllChannel" parameterType="com.bank.pojo.Authority" >
+        delete from authority_info where channel_code in
+        <foreach collection="array" item="channelCode" open="(" close=")" separator=",">
+            #{channelCode}
+        </foreach>
+    </delete>
+
+    <delete id="deleteBusiness" parameterType="com.bank.pojo.Authority">
+        delete from authority_info where business_code = #{businessCode}
+    </delete>
+
+    <delete id="deleteAllBusiness" parameterType="com.bank.pojo.Authority" >
+        delete from authority_info where business_code in
+        <foreach collection="array" item="businessCode" open="(" close=")" separator=",">
+            #{businessCode}
+        </foreach>
+    </delete>
+
+    <select id="queryByChannel" resultType="com.bank.pojo.Authority">
+        select authority_id,channel_code,business_code,open_mode,open_time,end_time
+        from authority_info where channel_code = #{channelCode}
+    </select>
+
+    <select id="queryByChannelAndBusiness" resultType="com.bank.pojo.Authority">
+        select authority_id,channel_code,business_code,open_mode,open_time,end_time
+        from authority_info where channel_code = #{channelCode} and business_code = #{businessCode}
+    </select>
+
+    <select id="queryBusinessAndAuthority" resultType="com.bank.pojo.Authority">
+        select b.business_code,b.business_name,a.authority_id,a.channel_code,a.open_mode,a.open_time,a.end_time from business_info as b
+        left join authority_info as a on b.business_code = a.business_code and a.channel_code = #{channelCode}
+    </select>
+</mapper>

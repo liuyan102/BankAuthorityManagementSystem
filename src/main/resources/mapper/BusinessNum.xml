@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bank.mapper.BusinessNumMapper">
+    <insert id="add" parameterType="com.bank.pojo.BusinessNum">
+        insert into business_num(business_id) values (#{businessID})
+    </insert>
+
+    <delete id="delete" parameterType="com.bank.pojo.BusinessNum">
+        delete from business_num where business_id = #{businessID}
+    </delete>
+
+    <delete id="deleteAll" parameterType="com.bank.pojo.BusinessNum">
+        delete from business_num where business_id in
+        <foreach collection="array" item="businessID" open="(" close=")" separator=",">
+            #{businessID}
+        </foreach>
+    </delete>
+
+    <select id="queryMax" resultType="java.lang.Integer">
+        select max(business_id) from business_num where 1=1
+    </select>
+</mapper>

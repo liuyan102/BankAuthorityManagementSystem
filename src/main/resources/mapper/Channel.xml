@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bank.mapper.ChannelMapper">
+    <insert id="add" parameterType="com.bank.pojo.Channel">
+        insert into channel_info(
+            channel_code,channel_name,channel_description,channel_type,channel_status
+        )
+        values(
+            #{channelCode},#{channelName},#{channelDescription},#{channelType},
+            #{channelStatus}
+        )
+    </insert>
+
+    <delete id="delete" parameterType="com.bank.pojo.Channel">
+        delete from channel_info where channel_code = #{channelCode}
+    </delete>
+
+    <delete id="deleteAll" parameterType="com.bank.pojo.Channel" >
+        delete from channel_info where channel_code in
+        <foreach collection="array" item="channelCode" open="(" close=")" separator=",">
+            #{channelCode}
+        </foreach>
+    </delete>
+
+    <update id="update" parameterType="com.bank.pojo.Channel">
+        update channel_info set
+            channel_name = #{channelName},channel_description = #{channelDescription},
+            channel_type = #{channelType},channel_status = #{channelStatus}
+        where channel_code = #{channelCode}
+    </update>
+
+    <select id="queryAll" resultType="com.bank.pojo.Channel">
+        select channel_code,channel_name,channel_description,channel_type,channel_status from channel_info
+    </select>
+
+    <select id="queryByKey" resultType="com.bank.pojo.Channel">
+        select channel_code,channel_name,channel_description,channel_type,channel_status from channel_info where concat(
+            channel_code,channel_name,channel_description,channel_type,channel_status
+        )
+        like concat('%',#{key},'%')
+    </select>
+
+    <select id="queryByType" resultType="com.bank.pojo.Channel">
+        select channel_code,channel_name,channel_description,channel_type,channel_status from channel_info where channel_type = #{channelType}
+    </select>
+
+    <select id="queryByStatus" resultType="com.bank.pojo.Channel">
+        select channel_code,channel_name,channel_description,channel_type,channel_status from channel_info where channel_status = #{channelStatus}
+    </select>
+
+    <select id="queryByKTS" resultType="com.bank.pojo.Channel">
+        select channel_code,channel_name,channel_description,channel_type,channel_status from channel_info
+        where concat(
+            channel_code,channel_name,channel_description
+        )
+        like concat('%',#{key},'%')
+        <if test="channelType == 2">
+            and channel_type != #{channelType}
+        </if>
+        <if test="channelStatus ==2">
+            and channel_status != #{channelStatus}
+        </if>
+        <if test="channelType != 2">
+            and channel_type = #{channelType}
+        </if>
+        <if test="channelStatus !=2">
+            and channel_status = #{channelStatus}
+        </if>
+    </select>
+</mapper>

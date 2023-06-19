@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bank.mapper.ClientMapper">
+    <select id="queryByUsername" resultType="com.bank.pojo.Client">
+        select client_id,username,password from client_info where username = #{username}
+    </select>
+
+    <select id="queryByBankCard" resultType="com.bank.pojo.Client">
+        select bank_card,bank_password,money from client_info where bank_card = #{bankCard}
+    </select>
+
+    <update id="updateMoney" parameterType="com.bank.pojo.Client">
+        update client_info set money = #{money}
+        where bank_card = #{bankCard}
+    </update>
+</mapper>
